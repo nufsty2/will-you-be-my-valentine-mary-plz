@@ -1,2 +1,7 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<h1>Will You Be My Valentine, Mary? PLZ?</h1>
+<p>Write one of Jeff's favorite Mary in this box and see if you win or something.</p>
+
+<%= form_tag("/pages/home") do %>
+  <%= text_field_tag :input_string %>
+  <%= submit_tag "Submit" %>
+<% end %>
