@@ -1,40 +1,64 @@
 class PagesController < ApplicationController
-  @@count = 0
+  @@count = -1
+  @@messages = {}
+  @@phrases = []
 
   def home
-    @input_string = params[:input_string]
-    @result = ""
-    @status = ""
+    # Initialization
+    @love_letter = []
+    if @@count == -1
+      @@count = 0
+      @@phrases = parse_phrases
+      return render layout: false
+    end
+    
+    input_string = params[:input_string]
 
-    if !@input_string.nil?
-      puts "count = #{@@count}"
+    # Check that the user actually put a string in the box
+    if !input_string.nil?
+      if input_string.empty?
+        @result = "You didn't enter an answer..."
+      
+      else
+        input_string.downcase!
+        input_string_words = input_string.split
+        match = false
 
-      @input_string.downcase!
+        @@phrases.each do |phrase|
+          input_string_words.each do |word|
+            if phrase.include?(word)
+              @@count += 1
+              @result = "MATCH!"
+              match = true
+              break
+            end
+            break if match
+          end
 
-      input_string_parts = @input_string.split
-
-      phrases = parse_phrases
-
-      phrases.each do |phrase|
-        if (input_string_parts - phrase).size > 1
-          @@count += 1
-          @result = "MATCH!"
-          @status = "#{@@count} of 9 phrases found!"
-          break
+          break if match
+          
+          @result = "Try again!"
         end
-
-        @result = "Try again..."
-      end
-
-      if @@count == 9
-        @result = "YOU WIN! HERE IS THE SECRET MESSAGE:"
-        @status = "I love you so much, Mar."
       end
     end
+    
+    if @@count >= @@phrases.size
+      update_for_endgame
+      return render layout: false
+    end
 
-    puts "GOt here!"
+    update_status
+    render layout: false
+  end
+  
+  def update_for_endgame
+    @result = "YOU WIN! Here is the secret message:"
+    @status = ""
+    @love_letter = I18n.t(:love_letter).map { |line| line }
+  end
 
-    render
+  def update_status
+    @status = "#{@@count} of #{@@phrases.size} phrases found."
   end
 
   def parse_phrases

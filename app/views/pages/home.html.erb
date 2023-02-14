@@ -1,5 +1,6 @@
 <h1>Will You Be My Valentine, Mary? PLZ?</h1>
-<p>Write one of Jeff's favorite Mary phrases in this box and see if you win or something.</p>
+<p>Guess one of Jeff's favorite Mary phrases or words in the box and see if you win or something.</p>
+<p>NOTE: Spelling is case-insensitive. Don't use punctuation.</p>
 
 <%= form_tag("/pages/home") do %>
   <%= text_field_tag :input_string %>
@@ -8,3 +9,7 @@
 
 <h2><%= @result %></h2>
 <p><%= @status %></p>
+
+<% @love_letter.each do |line| %> 
+  <p><%= line %></p>
+<% end %>
