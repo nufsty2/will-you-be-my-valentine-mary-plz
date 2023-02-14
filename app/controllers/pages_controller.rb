@@ -28,7 +28,7 @@ class PagesController < ApplicationController
           input_string_words.each do |word|
             if phrase.include?(word)
               @@count += 1
-              @result = "MATCH!"
+              @result = "MATCH: #{phrase.join(" ")}"
               match = true
               break
             end
